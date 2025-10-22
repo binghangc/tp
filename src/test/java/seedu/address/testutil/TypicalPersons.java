@@ -10,11 +10,12 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
 import static seedu.address.testutil.TypicalLessons.Y1_ENGLISH;
 import static seedu.address.testutil.TypicalLessons.Y1_PHYSICS;
-import static seedu.address.testutil.TypicalLessons.Y2_CHEMISTRY;
 import static seedu.address.testutil.TypicalLessons.Y3_GEOGRAPHY;
 import static seedu.address.testutil.TypicalLessons.Y3_HISTORY;
 import static seedu.address.testutil.TypicalLessons.Y3_MATH;
 import static seedu.address.testutil.TypicalLessons.Y4_ENGLISH;
+import static seedu.address.testutil.TypicalLessons.getTypicalLessons;
+import static seedu.address.testutil.TypicalPayments.currentYmUnpaid0;
 import static seedu.address.testutil.TypicalPayments.feb25Paid;
 import static seedu.address.testutil.TypicalPayments.feb25Unpaid;
 import static seedu.address.testutil.TypicalPayments.jan25Paid;
@@ -51,8 +52,8 @@ public class TypicalPersons {
             .withPaymentList(new PaymentList(new ArrayList<>(List.of(jan25Paid(), feb25Paid())))).build();
     public static final Student DANIEL = new StudentBuilder().withName("Daniel Meier").withPhone("87652533")
             .withEmail("cornelia@example.com").withAddress("10th street")
-            .withLessonList(new LessonList().addLesson(Y2_CHEMISTRY))
-            .withPaymentList(new PaymentList(new ArrayList<>(List.of(jan25Paid())))).build();
+            .withLessonList(new LessonList())
+            .withPaymentList(new PaymentList(new ArrayList<>(List.of(currentYmUnpaid0())))).build();
     public static final Student ELLE = new StudentBuilder().withName("Elle Meyer").withPhone("9482224")
             .withEmail("werner@example.com").withAddress("michegan ave")
             .withLessonList(new LessonList().addLesson(Y1_ENGLISH))
@@ -95,6 +96,7 @@ public class TypicalPersons {
         for (Person person : getTypicalPersons()) {
             ab.addPerson(person);
         }
+        ab.setLessons(getTypicalLessons());
         return ab;
     }
 

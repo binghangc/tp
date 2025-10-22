@@ -38,7 +38,7 @@ public class PaymentList {
         this.payments.add(payment);
 
         updateStatus();
-        setEarliestUnpaidYearmonth(findAndSetEarliestUnpaidYearMonth());
+        findAndSetEarliestUnpaidYearMonth();
     }
 
     /**
@@ -50,7 +50,7 @@ public class PaymentList {
         sortByYearMonth();
 
         updateStatus();
-        setEarliestUnpaidYearmonth(findAndSetEarliestUnpaidYearMonth());
+        findAndSetEarliestUnpaidYearMonth();
     }
 
     public int getSize() {
@@ -232,6 +232,27 @@ public class PaymentList {
             setEarliestUnpaidYearmonth(earliest);
         }
         return earliest;
+    }
+
+    /**
+     * Updates existing payment corresponding to yearmonth with new totalAmount.
+     *
+     * @param month the YearMonth corresponding to payment.
+     * @param totalAmount float representing the new total amount.
+     * @throws PaymentException
+     */
+    public void updateExistingPayment(YearMonth month, float totalAmount) throws PaymentException {
+        try {
+            Payment p = getPaymentByMonth(month);
+            p.setTotalAmount(totalAmount);
+            p.setPaid(false);
+
+            // reset status
+            updateStatus();
+            findAndSetEarliestUnpaidYearMonth();
+        } catch (PaymentException e) {
+            throw e;
+        }
     }
 
     /**

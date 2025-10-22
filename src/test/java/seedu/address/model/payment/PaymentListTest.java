@@ -1,10 +1,11 @@
 package seedu.address.model.payment;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPayments.feb25Paid;
 import static seedu.address.testutil.TypicalPayments.feb25Unpaid;
 import static seedu.address.testutil.TypicalPayments.jan25Paid;
@@ -138,13 +139,75 @@ public class PaymentListTest {
     }
 
     @Test
+    public void updateExistingAmount_amountUpdatedAndMarkedUnpaid() throws Exception {
+        YearMonth ym = YearMonth.of(2025, 10);
+        Payment p = new PaymentBuilder().withYearMonth(ym.toString()).withTotalAmount(0f).build();
+        PaymentList pl = new PaymentList(p);
+
+        pl.updateExistingPayment(ym, 2600.00f);
+
+        Payment pp = pl.getPaymentByMonth(ym);
+        assertEquals(2600.00f, pp.getTotalAmountFloat(), 1e-4, "totalAmount should update");
+        assertFalse(p.isPaid(), "payment must be marked unpaid after updateExistingPayment");
+    }
+
+    @Test
+    public void updateExistingAmount_recomputesAggregateStatus() throws Exception {
+        YearMonth ym = YearMonth.of(2025, 10);
+        Payment p = new PaymentBuilder().withYearMonth(ym.toString()).withTotalAmount(50f).build();
+        p.setPaid(true);
+        PaymentList pl = new PaymentList(p);
+
+        assertEquals(Status.PAID, pl.getStatus(), "precondition: list status starts as PAID");
+
+        pl.updateExistingPayment(ym, 100f);
+
+        assertEquals(Status.UNPAID, pl.getStatus(),
+                "after making target month unpaid, aggregate status should be UNPAID");
+    }
+
+    @Test
+    public void updateExistingAmount_doesNotAffectOtherMonths() throws Exception {
+        YearMonth oct = YearMonth.of(2025, 10);
+        YearMonth nov = YearMonth.of(2025, 11);
+
+        Payment pOct = new PaymentBuilder().withYearMonth(oct.toString()).withTotalAmount(500f).build();
+        Payment pNov = new PaymentBuilder().withYearMonth(nov.toString()).withTotalAmount(750f).build();
+
+        PaymentList pl = new PaymentList(new ArrayList<>(List.of(pOct, pNov)));
+
+        pl.updateExistingPayment(oct, 600f);
+
+        Payment paymentOct = pl.getPaymentByMonth(oct);
+        Payment paymentNov = pl.getPaymentByMonth(nov);
+
+        assertEquals(600f, paymentOct.getTotalAmountFloat(), 1e-4);
+        assertFalse(pOct.isPaid(), "Target month should be set to unpaid");
+
+        assertEquals(750f, paymentNov.getTotalAmountFloat(), 1e-4,
+                "Other months' amounts must not change");
+    }
+
+    @Test
+    public void updateExistingAmount_invalidMonth_throwsWhenMonthMissing() {
+        YearMonth ym = YearMonth.of(2025, 10);
+        YearMonth nov = YearMonth.of(2025, 11);
+        Payment p = new PaymentBuilder().withYearMonth(nov.toString()).withTotalAmount(500f).build();
+        PaymentList pl = new PaymentList(p);
+
+        assertThrows(PaymentException.class, () ->
+                        pl.updateExistingPayment(ym, 123f),
+                "should throw when target month is absent");
+    }
+
+    @Test
     public void markAllPaid_success() throws PaymentException {
         ArrayList<Payment> al = new ArrayList<>(List.of(jan25Paid(), feb25Unpaid(), mar25Unpaid()));
         PaymentList pl = new PaymentList(al);
         pl.markAllPaid();
 
         assertEquals(Status.PAID, pl.getStatus());
-        assertEquals(null, pl.getEarliestUnpaidYearmonth());
+        assertNull(pl.getEarliestUnpaidYearmonth());
     }
 
     @Test

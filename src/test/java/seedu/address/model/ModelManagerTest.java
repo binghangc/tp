@@ -132,6 +132,35 @@ public class ModelManagerTest {
     }
 
     @Test
+    public void addLesson_validStudentAndLesson_success() {
+        ModelManager modelManager = new ModelManager();
+        Student originalStudent = new StudentBuilder().build();
+        modelManager.addPerson(originalStudent);
+
+        Lesson lesson = new LessonBuilder().build();
+
+        modelManager.addLesson(originalStudent, lesson);
+
+        // Check if lesson is added to addressBook's lesson list
+        assertTrue(modelManager.hasLesson(lesson));
+
+        // Check if lesson is added to student's lesson list
+        Student updatedStudent = modelManager.getFilteredPersonList().stream()
+                .filter(p -> p.isSamePerson(originalStudent))
+                .map(p -> (Student) p)
+                .findFirst()
+                .orElseThrow();
+
+        assertTrue(updatedStudent.getLessonList().hasLesson(lesson));
+
+        // Check if student is added to lesson's student list
+        assertTrue(lesson.getStudent().equals(updatedStudent));
+
+        // Check if filtered person list is updated to show all persons
+        assertEquals(modelManager.getFilteredPersonList(), modelManager.getFilteredPersonList());
+    }
+
+    @Test
     public void equals() {
         AddressBook addressBook = new AddressBookBuilder().withPerson(ALICE).withPerson(BENSON).build();
         AddressBook differentAddressBook = new AddressBook();

@@ -16,22 +16,28 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_FRIEND;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalLessons.Y1_ENGLISH;
+import static seedu.address.testutil.TypicalLessons.Y2_CHEMISTRY;
 import static seedu.address.testutil.TypicalPayments.feb25Unpaid;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.BENSON;
 import static seedu.address.testutil.TypicalPersons.BOB;
 import static seedu.address.testutil.TypicalPersons.CARL;
+import static seedu.address.testutil.TypicalPersons.DANIEL;
 import static seedu.address.testutil.TypicalPersons.ELLE;
 import static seedu.address.testutil.TypicalPersons.FIONA;
 import static seedu.address.testutil.TypicalPersons.HANNAH;
 
+import java.time.YearMonth;
+
 import org.junit.jupiter.api.Test;
 
 import seedu.address.model.lesson.LessonList;
+import seedu.address.model.payment.Payment;
 import seedu.address.model.payment.PaymentList;
 import seedu.address.model.payment.Status;
 import seedu.address.model.payment.exceptions.PaymentException;
 import seedu.address.model.person.Person;
+import seedu.address.model.util.DateTimeUtil;
 import seedu.address.testutil.PersonBuilder;
 import seedu.address.testutil.StudentBuilder;
 
@@ -218,5 +224,45 @@ public class StudentTest {
 
     }
 
+    @Test
+    void refreshesPaymentTotal_addAndRemoveLesson_success() throws PaymentException {
+        // setup a blank student with empty payments
+        Student s = DANIEL;
+
+        PaymentList payments = s.getPayments();
+        YearMonth ym = DateTimeUtil.currentYearMonth();
+
+        // before adding any lesson
+        Payment before = payments.getPaymentByMonth(ym);
+        float beforeAmount = before.getTotalAmountFloat();
+        assertEquals(0f, beforeAmount, 1e-6);
+
+        // adding lesson
+        // should fire listener -> refreshCurrentMonthPayment()
+        s.getLessonList().addLesson(Y2_CHEMISTRY);
+
+        // then payment total should have increased
+        Payment after = payments.getPaymentByMonth(ym);
+        float afterAmount = after.getTotalAmountFloat();
+
+        assertTrue(afterAmount > beforeAmount,
+                "Payment total should increase after adding lesson");
+
+        assertEquals(s.mapStatus(payments.getStatus()), s.getPaymentStatus());
+
+        // removing lesson decreases total
+        float beforeRemove = payments
+                .getPaymentByMonth(ym)
+                .getTotalAmountFloat();
+
+        s.getLessonList().deleteLesson(Y2_CHEMISTRY);
+
+        float afterRemove = s.getPayments()
+                .getPaymentByMonth(ym)
+                .getTotalAmountFloat();
+
+        assertTrue(afterRemove < beforeRemove,
+                "Payment total should decrease after deleting lesson");
+    }
 
 }

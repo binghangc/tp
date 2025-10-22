@@ -69,6 +69,14 @@ public class Payment {
         return this.totalAmount.getAsFloat();
     }
 
+    public void setTotalAmount(float f) {
+        this.totalAmount = new TotalAmount(f);
+    }
+
+    public void setPaid(boolean isPaid) {
+        this.isPaid = isPaid;
+    }
+
     public boolean isPaid() {
         return isPaid;
     }

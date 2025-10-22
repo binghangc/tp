@@ -95,5 +95,21 @@ public class DeleteLessonCommand extends Command {
         }
 
     }
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+
+        // instanceof handles nulls
+        if (!(other instanceof DeleteLessonCommand)) {
+            return false;
+        }
+
+        DeleteLessonCommand otherDeleteLessonCommand = (DeleteLessonCommand) other;
+        return studentIndex.equals(otherDeleteLessonCommand.studentIndex)
+                && lessonIndex.equals(otherDeleteLessonCommand.lessonIndex);
+    }
+
 
 }

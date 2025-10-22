@@ -1,5 +1,13 @@
 package seedu.address.testutil;
 
+import static seedu.address.testutil.TypicalPersons.ALICE;
+import static seedu.address.testutil.TypicalPersons.BENSON;
+import static seedu.address.testutil.TypicalPersons.CARL;
+import static seedu.address.testutil.TypicalPersons.DANIEL;
+import static seedu.address.testutil.TypicalPersons.ELLE;
+import static seedu.address.testutil.TypicalPersons.FIONA;
+import static seedu.address.testutil.TypicalPersons.GEORGE;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +23,7 @@ public class TypicalLessons {
             .withLevel("3")
             .withDay("3")
             .withLessonTime("09:00", "11:00")
+            .withStudent(ALICE)
             .build();
 
     public static final Lesson Y1_PHYSICS = new LessonBuilder()
@@ -22,6 +31,7 @@ public class TypicalLessons {
             .withLevel("1")
             .withDay("1")
             .withLessonTime("10:00", "11:30")
+            .withStudent(BENSON)
             .build();
 
     public static final Lesson Y4_ENGLISH = new LessonBuilder()
@@ -29,6 +39,7 @@ public class TypicalLessons {
             .withLevel("4")
             .withDay("4")
             .withLessonTime("09:30", "11:00")
+            .withStudent(CARL)
             .build();
 
     public static final Lesson Y2_CHEMISTRY = new LessonBuilder()
@@ -36,6 +47,7 @@ public class TypicalLessons {
             .withLevel("2")
             .withDay("2")
             .withLessonTime("19:30", "21:00")
+            .withStudent(DANIEL)
             .build();
 
     public static final Lesson Y1_ENGLISH = new LessonBuilder()
@@ -43,6 +55,7 @@ public class TypicalLessons {
             .withLevel("1")
             .withDay("1")
             .withLessonTime("12:30", "14:00")
+            .withStudent(ELLE)
             .build();
 
     public static final Lesson Y3_HISTORY = new LessonBuilder()
@@ -50,6 +63,7 @@ public class TypicalLessons {
             .withLevel("3")
             .withDay("3")
             .withLessonTime("16:30", "18:00")
+            .withStudent(FIONA)
             .build();
 
     public static final Lesson Y3_GEOGRAPHY = new LessonBuilder()
@@ -57,6 +71,7 @@ public class TypicalLessons {
             .withLevel("3")
             .withDay("5")
             .withLessonTime("19:30", "21:00")
+            .withStudent(GEORGE)
             .build();
 
     private TypicalLessons() {} // prevents instantiation

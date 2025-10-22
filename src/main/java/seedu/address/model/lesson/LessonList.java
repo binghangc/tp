@@ -2,7 +2,12 @@ package seedu.address.model.lesson;
 
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Objects;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import seedu.address.model.lesson.exceptions.LessonException;
 import seedu.address.model.util.DateTimeUtil;
 
@@ -12,23 +17,52 @@ import seedu.address.model.util.DateTimeUtil;
  * It supports adding, retrieving, deleting, and printing lessons.
  */
 public class LessonList {
-    private final ArrayList<Lesson> lessons;
+    private final ObservableList<Lesson> lessons;
+    private final ObservableList<Lesson> unmodifiableLessons;
 
     /**
      * Constructs a new lesson list by creating an empty array list.
      */
     public LessonList() {
-        this.lessons = new ArrayList<>();
+        this.lessons = FXCollections.observableArrayList();
+        this.unmodifiableLessons = FXCollections.unmodifiableObservableList(this.lessons);
     }
 
     /**
-     * Constructs a new lesson list by copying from another array list.
+     * Constructs a new lesson list by copying from another LessonList/Collection.
+     *
+     * @param ll a LessonList/Collection of lessons.
      */
-    public LessonList(ArrayList ll) {
-        this.lessons = ll;
+    public LessonList(Collection<Lesson> ll) {
+        this.lessons = FXCollections.observableArrayList(Objects.requireNonNull(ll));
+        this.unmodifiableLessons = FXCollections.unmodifiableObservableList(this.lessons);
     }
 
+    /*
+    Listeners
+     */
 
+    /**
+     * Subscribes a listener to mutations of the list (add/remove/replace/update).
+     *
+     * @param listener a listener of any changes to lessons
+     */
+    public void addListener(ListChangeListener<? super Lesson> listener) {
+        lessons.addListener(listener);
+    }
+
+    /**
+     * Unsubscribes a previously added listener.
+     *
+     * @param listener a listener of any changes to lessons
+     **/
+    public void removeListener(ListChangeListener<? super Lesson> listener) {
+        lessons.removeListener(listener);
+    }
+
+    /*
+    Getters
+     */
     public int getSize() {
         return lessons.size();
     }
