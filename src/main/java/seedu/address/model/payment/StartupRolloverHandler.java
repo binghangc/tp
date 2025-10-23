@@ -1,5 +1,7 @@
 package seedu.address.model.payment;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.IOException;
 import java.time.YearMonth;
 import java.util.logging.Logger;
@@ -9,6 +11,7 @@ import seedu.address.model.Model;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.util.DateTimeUtil;
 import seedu.address.storage.Storage;
+
 
 /**
  * Handles monthly rollover and first-time initialization logic during app startup.
@@ -32,6 +35,8 @@ public class StartupRolloverHandler {
      * @param storage the storage interface for saving address book and user preferences
      */
     public StartupRolloverHandler(Model model, Storage storage) {
+        requireNonNull(model);
+        requireNonNull(storage);
         this.model = model;
         this.storage = storage;
     }
