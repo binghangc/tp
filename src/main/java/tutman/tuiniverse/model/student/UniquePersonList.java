@@ -10,6 +10,7 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import tutman.tuiniverse.model.lesson.Lesson;
+import tutman.tuiniverse.model.payment.PaymentList;
 import tutman.tuiniverse.model.student.exceptions.DuplicatePersonException;
 import tutman.tuiniverse.model.student.exceptions.PersonNotFoundException;
 
@@ -67,11 +68,15 @@ public class UniquePersonList implements Iterable<Student> {
             throw new DuplicatePersonException();
         }
 
+        PaymentList carriedPayments = target.getPayments().copy();
+
         ArrayList<Lesson> lessons = target.getLessonList().getLessons();
         for (Lesson lesson : lessons) {
             lesson.addStudent(editedPerson);
             editedPerson.getLessonList().addLesson(lesson);
         }
+
+        editedPerson.setPayments(carriedPayments);
 
         internalList.set(index, editedPerson);
     }

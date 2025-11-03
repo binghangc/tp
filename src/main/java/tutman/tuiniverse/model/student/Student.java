@@ -117,6 +117,17 @@ public class Student {
     }
 
     /**
+     * Replaces the student's current PaymentList with a new one.
+     * This should be used when restoring or carrying over payment data during edits.
+     */
+    public void setPayments(PaymentList newPayments) {
+        requireNonNull(newPayments);
+        this.payments.getPayments().clear();
+        this.payments.getPayments().addAll(newPayments.getPayments());
+        setPaymentStatus(mapStatus(newPayments.getStatus()));
+    }
+
+    /**
      * Returns the payment status of the student for the month
      */
     public PaymentStatus getPaymentStatus() {
